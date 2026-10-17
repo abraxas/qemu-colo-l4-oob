@@ -1,0 +1,21 @@
+name: qemu-colo-l4-oob
+
+services:
+  vuln:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: qemu-colo-l4-oob:lab
+    init: true
+    restart: "no"
+    ports:
+      - "127.0.0.1:18770:18770"
+      - "127.0.0.1:18771:18771"
+    environment:
+      ASAN_OPTIONS: abort_on_error=1:halt_on_error=1:detect_leaks=0:allocator_may_return_null=1:detect_odr_violation=0
+      WITNESS: QEMU-COLO-L4-OOB-WITNESS
+    labels:
+      lab: qemu-colo-l4-oob
+    volumes:
+      - ./poc.py:/lab/poc.py:ro
+    command: ["sleep", "infinity"]
